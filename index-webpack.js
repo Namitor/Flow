@@ -77,11 +77,15 @@
 	var spirit = void 0;
 	var enemies = [];
 	var timer = void 0;
+	var lastHoldingTime = 0;
+	var lastBestTime = 0;
 	var holdingTime = 0;
 	var bestTime = 0;
 
 	var enemyCount = 10;
 	var pointRadius = 30;
+	var minSpeed = 10;
+	var secondsSpeedUp = 5;
 	var canvas = document.getElementById("mainCanvas");
 	var cxt = canvas.getContext("2d");
 	canvas.width = window.innerWidth;
@@ -97,7 +101,7 @@
 	    spirit = new _Spirit2.default({
 	        x: _Map2.default.width / 2,
 	        y: _Map2.default.height / 2,
-	        radius: 30,
+	        radius: pointRadius,
 	        color: 'green',
 	        enemies: enemies
 	    });
@@ -110,7 +114,7 @@
 	        var y = pointRadius + Math.random() * (_Map2.default.height - 2 * pointRadius);
 	        var vx = Math.random() * 2 - 1;
 	        var vy = Math.random() * 2 - 1;
-	        var speed = Math.random() * 10 + 10;
+	        var speed = Math.random() * minSpeed + minSpeed;
 	        enemies.push(new _Enemy2.default({
 	            x: x,
 	            y: y,
@@ -130,12 +134,21 @@
 	}
 
 	function renderTimer() {
+	    //以防锁屏或页面切至后台导致计时器出错
+	    if (holdingTime - lastHoldingTime > 1) {
+	        holdingTime = lastHoldingTime;
+	    }
+	    if (bestTime - lastBestTime > 1) {
+	        bestTime = lastBestTime;
+	    }
 	    cxt.textAlign = 'left';
 	    cxt.textBaseline = 'top';
 	    cxt.strokeStyle = 'white';
 	    cxt.font = 'bold 36px arial';
 	    cxt.fillStyle = 'white';
 	    cxt.fillText("Time: " + holdingTime + "  Best: " + bestTime, 5, 10);
+	    lastHoldingTime = holdingTime;
+	    lastBestTime = bestTime;
 	}
 	function animate() {
 	    _Map2.default.render();
@@ -162,7 +175,7 @@
 	            if (bestTime < holdingTime) {
 	                bestTime = holdingTime;
 	            }
-	            if (holdingTime % 5 === 0) {
+	            if (holdingTime % secondsSpeedUp === 0) {
 	                for (var i = 0; i < enemies.length; i++) {
 	                    enemies[i].speedUp();
 	                }
@@ -233,7 +246,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -244,10 +257,6 @@
 	var _Point2 = __webpack_require__(4);
 
 	var _Point3 = _interopRequireDefault(_Point2);
-
-	var _Map = __webpack_require__(2);
-
-	var _Map2 = _interopRequireDefault(_Map);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -294,7 +303,7 @@
 	    }
 
 	    _createClass(Spirit, [{
-	        key: 'bind',
+	        key: "bind",
 	        value: function bind() {
 	            var _this2 = this;
 
@@ -450,8 +459,6 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var nextX = this.x + this.vx * this.speed;
-	            var nextY = this.y + this.vy * this.speed;
 	            if (this.x + this.vx * this.speed < this.radius || this.x + this.vx * this.speed > _Map2.default.width - this.radius) {
 	                this.vx *= -1;
 	            }

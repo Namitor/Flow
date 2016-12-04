@@ -17,6 +17,8 @@ const raf = window.requestAnimationFrame
 let spirit;
 let enemies = [];
 let timer;
+let lastHoldingTime = 0;
+let lastBestTime = 0;
 let holdingTime = 0;
 let bestTime = 0;
 
@@ -72,12 +74,21 @@ function collision(enemy, spirit){
 }
 
 function renderTimer() {
+    //以防锁屏或页面切至后台导致计时器出错
+    if(holdingTime - lastHoldingTime > 1) {
+        holdingTime = lastHoldingTime;
+    }
+    if(bestTime - lastBestTime > 1){
+        bestTime = lastBestTime;
+    }
     cxt.textAlign = 'left';
     cxt.textBaseline = 'top';
     cxt.strokeStyle = 'white';
     cxt.font = 'bold 36px arial';
     cxt.fillStyle = 'white';
     cxt.fillText("Time: "+holdingTime+"  Best: "+bestTime, 5,10);
+    lastHoldingTime = holdingTime;
+    lastBestTime = bestTime;
 }
 function animate(){
     map.render();
