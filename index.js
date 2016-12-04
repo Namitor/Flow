@@ -22,6 +22,8 @@ let bestTime = 0;
 
 const enemyCount = 10;
 const pointRadius = 30;
+const minSpeed = 10;
+const secondsSpeedUp = 5;
 const canvas = document.getElementById("mainCanvas");
 const cxt = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -37,7 +39,7 @@ function initSpirit(){
     spirit = new Spirit({
         x:map.width/2,
         y:map.height/2,
-        radius:30,
+        radius:pointRadius,
         color:'green',
         enemies:enemies
     });
@@ -50,7 +52,7 @@ function initEnemies(){
         let y = pointRadius + Math.random()*(map.height-2*pointRadius);
         let vx = Math.random()*2-1;
         let vy = Math.random()*2-1;
-        let speed = Math.random()*10+10;
+        let speed = Math.random()*minSpeed+minSpeed;
         enemies.push(new Enemy({
             x:x,
             y:y,
@@ -102,7 +104,7 @@ function initTimer() {
             if(bestTime<holdingTime){
                 bestTime = holdingTime;
             }
-            if (holdingTime % 5 === 0) {
+            if (holdingTime % secondsSpeedUp === 0) {
                 for (let i = 0; i < enemies.length; i++) {
                     enemies[i].speedUp();
                 }

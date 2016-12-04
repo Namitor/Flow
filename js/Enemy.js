@@ -19,8 +19,6 @@ export default class Enemy extends Point{
     }
 
     render(){
-        let nextX = this.x + this.vx*this.speed;
-        let nextY = this.y + this.vy*this.speed;
         if(this.x + this.vx*this.speed<this.radius||
             this.x + this.vx*this.speed>map.width-this.radius){
             this.vx *= -1;

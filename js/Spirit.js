@@ -2,7 +2,6 @@
  * Created by Zane Wang on 2016/12/2.
  */
 import Point from './Point';
-import map from './Map';
 
 function detect(arr, val){
     return arr.some(function(v){
